@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Survey</title>
+
+    <!-- Bootstrap and Jquery -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+    <div class="container">
+        <h2>Survey Questions</h2>
+        <hr>
+
+        <h3><strong>About You</strong></h3>
+        <h4>Name (Required)</h4>
+        <input type="text" id="name" class="form-control" required="">
+
+        <h4>Photo URL (Required)</h4>
+        <input type="text" id="photo" class="form-control" required="">
+
+        <hr>
+
+        <h3><strong>Question 1</strong></h3>
+        <h4>I make friends easily.</h4>
+
+        <input type="range" size="4" id="q1" min="1" max="5" value="3"> (1-5)
+
+        <hr>
+
+        <h3><strong>Question 2</strong></h3>
+        <h4>I consider myself the life of the party.</h4>
+        
+        <input type="range" size="4" id="q2" min="1" max="5" value="3"> (1-5)
+
+
+
+        <hr>
+
+        <h3><strong>Question 3</strong></h3>
+        <h4>I value instinct over intelligence.</h4>
+        
+        <input type="range" size="4" id="q3" min="1" max="5" value="3"> (1-5)
+
+
+            
+
+        <hr>
+
+        <h3><strong>Question 4</strong></h3>
+        <h4>I often worry about the future.</h4>
+        
+        <input type="range" size="4" id="q4" min="1" max="5" value="3"> (1-5)
+
+
+
+
+        <hr>
+
+        <h3><strong>Question 5</strong></h3>
+        <h4>I am an outgoing individual.</h4>
+        
+        <input type="range" size="4" id="q5" min="1" max="5" value="3"> (1-5)
+
+
+        
+
+        <hr>
+
+        <button type="submit" class="btn btn-dark submit" id="submitBtn" data-toggle="modal" data-target="#resultModal">Submit</button>
+     
+        
+        
+    </div>
+
+
+
+  
+
+<!-- The Modal -->
+<div id="resultModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <p><strong>Your match is:</strong> <span id="matchname" style="color: green"> </span></p>
+  </div>
+
+</div>
+
+</body>
+</html>
+
+<style>
+
+    /* The Modal (background) */
+
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+
+
+</style>
+
+<!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS SENT TO OUR SERVER -->
+<script type="text/javascript">
+
+    // variables
+
+    let matchName;
+    // In this code below we create the Front-end JavaScript which "POSTS" our form data to our express server.
+    // In essence, when the user hits submit, jQuery grabs all of the fields then sends a post request to our api
+    // Our api recognizes the route (/api/tables)... and then runs the associated code (found in api-routes.js).
+    // In this case the associated code "saves" the data to the table-data.js file or waitinglist-data.js file
+
+
+
+  
+  
+    $(".submit").on("click", function(event) {
+      event.preventDefault();
+  
+      // Here we grab the form elements
+       newResponse = {
+        name: $("#name").val().trim(),
+        photo: $("#photo").val().trim(),
+        scores: [ 
+        $("#q1").val().trim(),
+        $("#q2").val().trim(),
+        $("#q3").val().trim(),
+        $("#q4").val().trim(),
+        $("#q5").val().trim()
+      ]
+      };
+
+
+      // Convert user's response into a simple array of numbers
+
+       userScores = [
+        parseInt($("#q1").val().trim()),
+        parseInt($("#q2").val().trim()),
+        parseInt($("#q3").val().trim()),
+        parseInt($("#q4").val().trim()),
+        parseInt($("#q5").val().trim())
+      ];
+
+      function updateModal() {
+
+        $("#matchname").text(matchName);
+      }
+
+      // This line is the magic. It"s very similar to the standard ajax function we used.
+      // Essentially we give it a URL, we give it the object we want to send, then we have a "callback".
+      // The callback is the response of the server. In our case, we set up code in api-routes that "returns" true or false
+      // depending on if a tables is available or not.
+  
+      $.post("/api/friends", newResponse, function(data){
+
+
+             // Add the name to the modal
+
+             matchName = data.friendMatch.name ;
+
+             console.log(matchName);
+
+             updateModal();
+         });
+     });
+
+
+// MODAL INFO
+
+// Get the modal
+var modal = document.getElementById('resultModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("submitBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+
+
+  
+  </script>
+  
+

@@ -1,4 +1,4 @@
-var friendArray = [
+var friendData = [
 
 {
     "name":"Ahmed",
@@ -8,12 +8,7 @@ var friendArray = [
         1,
         4,
         4,
-        5,
-        1,
-        2,
-        5,
-        4,
-        1
+        5
       ]
   },
   {
@@ -25,12 +20,7 @@ var friendArray = [
         1,
         5,
         2,
-        1,
-        3,
-        4,
-        4,
-        4,
-        4
+        1
       ]
   },
 
@@ -43,12 +33,7 @@ var friendArray = [
           2,
           3,
           4,
-          5,
-          4,
-          3,
-          2,
-          1,
-          2
+          5
         ]
     },
 
@@ -61,12 +46,7 @@ var friendArray = [
               5,
               4,
               3,
-              2,
-              2,
-              1,
-              2,
-              1,
-              3
+              2
             ]
         },
 
@@ -79,13 +59,10 @@ var friendArray = [
                   1,
                   3,
                   5,
-                  5,
-                  5,
-                  3,
-                  1,
-                  2,
-                  4
+                  5
                 ]
             }
 
 ];
+
+module.exports = friendData;
